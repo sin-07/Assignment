@@ -31,7 +31,7 @@ const navigationConfig = [
   { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
   { icon: Users, label: "Leads", href: "/leads" },
   { icon: Megaphone, label: "Campaign", href: "/campaigns" },
-  { icon: MessageSquare, label: "Messages", href: "/messages", badge: "99+" },
+  { icon: MessageSquare, label: "Messages", href: "/messages", badge: "20+" },
   { icon: Linkedin, label: "Linkedin Accounts", href: "/linkedin-accounts" },
 ]
 
