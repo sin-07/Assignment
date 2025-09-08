@@ -455,7 +455,7 @@ export default function CampaignDetailsPage() {
 
                       <div className="bg-white border border-gray-200 rounded-lg p-4 min-h-[200px] relative">
                         <div className="text-gray-700 text-sm leading-relaxed">
-                          <p>Hi {"{firstName}"}, just following up on my message. Just try it for 1 week. No cost. If it doesn't deliver results, you can remove it.</p>
+                          <p>Hi {"{firstName}"}, just following up on my message. Just try it for 1 week. No cost. If it doesn&apos;t deliver results, you can remove it.</p>
                         </div>
                         
                         <div className="absolute bottom-4 right-4 text-xs text-gray-400">
@@ -486,7 +486,7 @@ export default function CampaignDetailsPage() {
                     </div>
 
                     <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 min-h-[100px] text-sm text-gray-700">
-                      Awesome to connect, <code className="bg-orange-100 text-orange-700 px-1 rounded">{"{firstName}"}</code>! Allow me to explain Kandid a bit: So these are consultative salespersons that engage with visitors like an offline store salesperson does. It helps them with product recommendations based on their preferences/concerns. Here's a video to help you visualise it better: https://youtu.be/J31XNvj-vPo
+                      Awesome to connect, <code className="bg-orange-100 text-orange-700 px-1 rounded">{"{firstName}"}</code>! Allow me to explain Kandid a bit: So these are consultative salespersons that engage with visitors like an offline store salesperson does. It helps them with product recommendations based on their preferences/concerns. Here&apos;s a video to help you visualise it better: https://youtu.be/J31XNvj-vPo
                     </div>
                   </div>
 
@@ -544,7 +544,7 @@ export default function CampaignDetailsPage() {
                     </div>
 
                     <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 min-h-[100px] text-sm text-gray-700 mb-4">
-                      Hi <code className="bg-orange-100 text-orange-700 px-1 rounded">{"{firstName}"}</code>, just following up on my message. Just try it for 1 week. No cost. If it doesn't deliver results, you can remove it.
+                      Hi <code className="bg-orange-100 text-orange-700 px-1 rounded">{"{firstName}"}</code>, just following up on my message. Just try it for 1 week. No cost. If it doesn&apos;t deliver results, you can remove it.
                     </div>
 
                     <div className="flex items-center space-x-4 text-sm text-gray-600">
@@ -742,7 +742,7 @@ export default function CampaignDetailsPage() {
                       <div className="flex-1">
                         <h4 className="font-medium text-gray-900 mb-1">Invitation Request</h4>
                         <p className="text-sm text-gray-600">
-                          Message: Hi Sumeet, I'm building consultative...{" "}
+                          Message: Hi Sumeet, I&apos;m building consultative...{" "}
                           <button className="text-blue-600 hover:text-blue-700 text-sm">See More</button>
                         </p>
                       </div>
