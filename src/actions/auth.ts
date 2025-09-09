@@ -9,76 +9,64 @@ import { redirect } from 'next/navigation'
 // Initialize database tables for production
 async function initializeDatabaseTables() {
   try {
-    // Check if we're in production and need to create tables
-    if (process.env.VERCEL || process.env.NODE_ENV === 'production') {
-      console.log('Initializing database tables for production...')
-      
-      // Try to query users table first to see if it exists
-      try {
-        await db.select().from(users).limit(1)
-        console.log('Database tables already exist')
-        return
-      } catch (error: any) {
-        // Table doesn't exist, we need to create it
-        console.log('Creating database tables...')
-      }
-      
-      // For LibSQL, we need to use the client directly for CREATE TABLE statements
-      
-      // Create users table
-      await dbClient.execute(`
-        CREATE TABLE IF NOT EXISTS users (
-          id TEXT PRIMARY KEY NOT NULL,
-          name TEXT,
-          email TEXT NOT NULL,
-          email_verified INTEGER,
-          image TEXT,
-          password TEXT,
-          created_at INTEGER,
-          updated_at INTEGER
-        )
-      `)
-      
-      // Create campaigns table
-      await dbClient.execute(`
-        CREATE TABLE IF NOT EXISTS campaigns (
-          id TEXT PRIMARY KEY NOT NULL,
-          name TEXT NOT NULL,
-          status TEXT DEFAULT 'active' NOT NULL,
-          user_id TEXT NOT NULL,
-          total_leads INTEGER DEFAULT 0 NOT NULL,
-          request_sent INTEGER DEFAULT 0 NOT NULL,
-          request_accepted INTEGER DEFAULT 0 NOT NULL,
-          request_replied INTEGER DEFAULT 0 NOT NULL,
-          created_at INTEGER,
-          updated_at INTEGER,
-          FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-        )
-      `)
-      
-      // Create leads table
-      await dbClient.execute(`
-        CREATE TABLE IF NOT EXISTS leads (
-          id TEXT PRIMARY KEY NOT NULL,
-          name TEXT NOT NULL,
-          email TEXT,
-          subtitle TEXT,
-          avatar TEXT,
-          campaign_id TEXT NOT NULL,
-          status TEXT DEFAULT 'pending' NOT NULL,
-          status_type TEXT DEFAULT 'pending' NOT NULL,
-          company TEXT,
-          created_at INTEGER,
-          updated_at INTEGER,
-          FOREIGN KEY (campaign_id) REFERENCES campaigns(id) ON DELETE CASCADE
-        )
-      `)
-      
-      console.log('Database tables created successfully')
-    }
+    console.log('Initializing database tables...')
+    
+    // Always try to create tables in production since we're using /tmp storage
+    // In local development, this will also ensure tables exist
+    
+    // Create users table
+    await dbClient.execute(`
+      CREATE TABLE IF NOT EXISTS users (
+        id TEXT PRIMARY KEY NOT NULL,
+        name TEXT,
+        email TEXT NOT NULL,
+        email_verified INTEGER,
+        image TEXT,
+        password TEXT,
+        created_at INTEGER,
+        updated_at INTEGER
+      )
+    `)
+    
+    // Create campaigns table
+    await dbClient.execute(`
+      CREATE TABLE IF NOT EXISTS campaigns (
+        id TEXT PRIMARY KEY NOT NULL,
+        name TEXT NOT NULL,
+        status TEXT DEFAULT 'active' NOT NULL,
+        user_id TEXT NOT NULL,
+        total_leads INTEGER DEFAULT 0 NOT NULL,
+        request_sent INTEGER DEFAULT 0 NOT NULL,
+        request_accepted INTEGER DEFAULT 0 NOT NULL,
+        request_replied INTEGER DEFAULT 0 NOT NULL,
+        created_at INTEGER,
+        updated_at INTEGER,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+      )
+    `)
+    
+    // Create leads table
+    await dbClient.execute(`
+      CREATE TABLE IF NOT EXISTS leads (
+        id TEXT PRIMARY KEY NOT NULL,
+        name TEXT NOT NULL,
+        email TEXT,
+        subtitle TEXT,
+        avatar TEXT,
+        campaign_id TEXT NOT NULL,
+        status TEXT DEFAULT 'pending' NOT NULL,
+        status_type TEXT DEFAULT 'pending' NOT NULL,
+        company TEXT,
+        created_at INTEGER,
+        updated_at INTEGER,
+        FOREIGN KEY (campaign_id) REFERENCES campaigns(id) ON DELETE CASCADE
+      )
+    `)
+    
+    console.log('Database tables created successfully')
   } catch (error: any) {
     console.error('Error initializing database tables:', error)
-    // Don't throw the error, just log it - we'll try to continue
+    // Don't throw the error, just log it
   }
 }
 
@@ -89,6 +77,9 @@ export async function authenticate(
   formData: FormData,
 ) {
   try {
+    // Always initialize database tables first
+    await initializeDatabaseTables()
+    
     // Extract credentials from the form submission
     const userEmail = formData.get('email') as string
     const userPassword = formData.get('password') as string

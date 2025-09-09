@@ -2,22 +2,29 @@ import { drizzle } from 'drizzle-orm/libsql'
 import { createClient } from '@libsql/client'
 import * as schema from './schema'
 
-// Temporary solution for production: use in-memory database
-// This will work but data won't persist between deployments
+// Database configuration with better production handling
 const isProduction = process.env.VERCEL || process.env.NODE_ENV === 'production'
+const databaseUrl = process.env.DATABASE_URL || 'file:local.db'
 
 let client
 
-if (isProduction && !process.env.DATABASE_URL?.startsWith('libsql://')) {
-  // Production without proper database URL - use in-memory
-  console.warn('Using in-memory database in production. Data will not persist!')
+// For production, we need to ensure tables are created each time
+// since in-memory databases don't persist between function calls
+if (isProduction && !databaseUrl.startsWith('libsql://')) {
+  console.log('Production: Using file-based SQLite with /tmp directory')
   client = createClient({
-    url: ':memory:',
+    url: 'file:/tmp/production.db', // Use /tmp for serverless file storage
+  })
+} else if (databaseUrl.startsWith('libsql://')) {
+  // External LibSQL database (Turso)
+  client = createClient({
+    url: databaseUrl,
+    authToken: process.env.DATABASE_AUTH_TOKEN,
   })
 } else {
-  // Use the configured database URL or local file
+  // Local development
   client = createClient({
-    url: process.env.DATABASE_URL || 'file:local.db',
+    url: databaseUrl,
     authToken: process.env.DATABASE_AUTH_TOKEN,
   })
 }
