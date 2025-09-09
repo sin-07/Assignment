@@ -210,6 +210,48 @@ export async function register(
   }
 }
 
+// Register or login user (for OAuth flows)
+export async function registerOrLoginUser(userData: {
+  name: string
+  email: string
+  id: string
+}) {
+  try {
+    // Initialize database tables first
+    await initializeDatabaseTables()
+    
+    // Check if user already exists
+    const existingUser = await db
+      .select()
+      .from(users)
+      .where(eq(users.email, userData.email))
+      .limit(1)
+
+    if (existingUser.length > 0) {
+      // User exists, just return their data
+      return existingUser[0]
+    }
+
+    // Create new user
+    const newUser = {
+      id: userData.id,
+      name: userData.name,
+      email: userData.email,
+      emailVerified: null,
+      image: null,
+      password: null, // OAuth users don't have passwords
+      createdAt: Date.now(),
+      updatedAt: Date.now()
+    }
+
+    await db.insert(users).values(newUser)
+    return newUser
+  } catch (error: any) {
+    console.error('Error in registerOrLoginUser:', error)
+    throw error
+  }
+}
+
 export async function logout() {
   redirect('/login')
 }

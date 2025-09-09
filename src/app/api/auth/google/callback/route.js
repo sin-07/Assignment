@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { registerOrLoginUser } from '@/actions/auth'
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url)
@@ -52,6 +53,18 @@ export async function GET(request) {
     })
 
     const googleProfile = await profileResponse.json()
+
+    // Register/login user in database before redirecting
+    try {
+      await registerOrLoginUser({
+        name: `${googleProfile.given_name || ''} ${googleProfile.family_name || ''}`.trim(),
+        email: googleProfile.email,
+        id: googleProfile.id
+      })
+    } catch (dbError) {
+      console.error('Database error during OAuth registration:', dbError)
+      // Continue with the flow even if database fails
+    }
 
     // Build redirect URL with user data for the success page
     const userParams = new URLSearchParams({
