@@ -14,27 +14,6 @@ A modern Next.js 15+ application built with a comprehensive tech stack including
 - **Zustand** - Client state management
 - **Server Actions** - Server-side mutations
 
-## Project Structure
-
-```
-src/
-├── app/                    # Next.js 15 App Router
-│   ├── globals.css        # Global styles with Tailwind
-│   ├── layout.tsx         # Root layout with providers
-│   └── page.tsx          # Home page
-├── components/            # Reusable UI components
-│   └── ui/               # shadcn/ui components
-├── lib/                  # Utility functions
-│   └── utils.ts         # Class name utilities
-├── db/                   # Database configuration
-│   ├── index.ts         # Drizzle client setup
-│   └── schema.ts        # Database schema definitions
-├── store/                # Zustand stores
-│   └── app-store.ts     # Main application store
-├── actions/              # Server Actions
-│   └── index.ts         # Database operations
-└── providers.tsx         # React Query provider
-```
 
 ## Environment Setup
 

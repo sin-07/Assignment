@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { useAuthGuard } from "@/hooks/useAuthGuard"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -138,6 +139,9 @@ const ConnectionStatus = ({ connected, pending }: { connected: number, pending: 
 }
 
 export default function CampaignsPage() {
+  // Protect this route - redirect to login if not authenticated
+  useAuthGuard('/login');
+
   const [activeTab, setActiveTab] = useState("All Campaigns")
   const [campaigns, setCampaigns] = useState(initialCampaignsData)
   const [loading, setLoading] = useState(false)

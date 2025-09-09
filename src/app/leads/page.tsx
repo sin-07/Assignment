@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
+import { useAuthGuard } from "@/hooks/useAuthGuard"
 import { 
   Table, 
   TableBody, 
@@ -504,6 +505,9 @@ const LeadProfile = ({ lead, isOpen, onClose }: {
 }
 
 export default function LeadsPage() {
+  // Protect this route - redirect to login if not authenticated
+  useAuthGuard('/login');
+
   const [selectedLead, setSelectedLead] = useState<any>(null)
   const [isProfileOpen, setIsProfileOpen] = useState(false)
   const [isAdditionalProfileExpanded, setIsAdditionalProfileExpanded] = useState(false)

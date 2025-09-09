@@ -9,11 +9,15 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
+import { useGuestGuard } from "@/hooks/useAuthGuard";
 
 export default function LoginPage() {
   const [authError, dispatch] = useActionState(authenticate, undefined);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [registrationSuccess, setRegistrationSuccess] = useState("");
+
+  // Redirect authenticated users to dashboard
+  useGuestGuard('/leads');
 
   // Check if user just registered successfully - had to handle this manually
   // since I wanted to show a nice success message after registration

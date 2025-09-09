@@ -6,8 +6,12 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
+import { useGuestGuard } from '@/hooks/useAuthGuard'
 
 export default function ForgotPasswordPage() {
+  // Redirect authenticated users to dashboard
+  useGuestGuard('/leads');
+
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <Card className="w-full max-w-md bg-white shadow-lg border-0">

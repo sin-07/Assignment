@@ -7,11 +7,17 @@ export interface UserData {
   email: string
 }
 
-// Store user info in localStorage after login
+// Store user info in localStorage and cookies after login
 // I know localStorage isn't the most secure but it works for this demo
 export const storeUserProfile = (userProfile: UserData): void => {
   if (typeof window !== 'undefined') {
     localStorage.setItem('currentUserData', JSON.stringify(userProfile))
+    
+    // Also set a cookie for middleware authentication check
+    // Set cookie to expire in 7 days
+    const expiryDate = new Date()
+    expiryDate.setTime(expiryDate.getTime() + (7 * 24 * 60 * 60 * 1000))
+    document.cookie = `userData=${JSON.stringify(userProfile)}; expires=${expiryDate.toUTCString()}; path=/; SameSite=Lax`
   }
 }
 
@@ -28,5 +34,7 @@ export const getCurrentUser = (): UserData | null => {
 export const clearUserSession = (): void => {
   if (typeof window !== 'undefined') {
     localStorage.removeItem('currentUserData')
+    // Also clear the cookie
+    document.cookie = 'userData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
   }
 }

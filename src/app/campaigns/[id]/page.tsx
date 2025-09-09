@@ -3,6 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { useParams } from "next/navigation"
+import { useAuthGuard } from "@/hooks/useAuthGuard"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -122,6 +123,9 @@ const getLeadsData = () => [
 ]
 
 export default function CampaignDetailsPage() {
+  // Protect this route - redirect to login if not authenticated
+  useAuthGuard('/login');
+
   const params = useParams()
   const campaignId = params.id as string
   const campaign = getCampaignData(campaignId)
