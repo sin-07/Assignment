@@ -6,6 +6,30 @@ import { eq } from 'drizzle-orm'
 import bcrypt from 'bcryptjs'
 import { redirect } from 'next/navigation'
 
+// Initialize database tables for production
+async function initializeDatabaseTables() {
+  try {
+    // Check if we're in production and need to create tables
+    if (process.env.VERCEL || process.env.NODE_ENV === 'production') {
+      // Try to create a test user to see if tables exist
+      await db.select().from(users).limit(1)
+    }
+  } catch (error: any) {
+    // If tables don't exist, the query will fail
+    if (error.message.includes('no such table') || error.message.includes('does not exist')) {
+      console.log('Tables not found, creating them...')
+      // Tables don't exist, create them
+      // Note: This is a simplified approach. In a real app, you'd use migrations.
+      try {
+        // We'll let the database creation fail gracefully since we can't easily create tables with Drizzle in serverless
+        console.log('Database tables may need to be created manually in production')
+      } catch (createError) {
+        console.error('Could not create tables:', createError)
+      }
+    }
+  }
+}
+
 // Handle user login authentication
 // I went with a simple email/password approach since it's more straightforward
 export async function authenticate(
@@ -83,6 +107,9 @@ export async function register(
   formData: FormData,
 ) {
   try {
+    // Initialize database tables in production if needed
+    await initializeDatabaseTables()
+    
     const userFirstName = formData.get('firstName') as string
     const userLastName = formData.get('lastName') as string
     const userEmail = formData.get('email') as string

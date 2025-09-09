@@ -1,8 +1,12 @@
-import { drizzle } from 'drizzle-orm/better-sqlite3'
-import Database from 'better-sqlite3'
+import { drizzle } from 'drizzle-orm/libsql'
+import { createClient } from '@libsql/client'
 import * as schema from './schema'
 
-const sqlite = new Database(process.env.DATABASE_URL || './local.db')
-export const db = drizzle(sqlite, { schema })
+// Use LibSQL for both development and production
+const client = createClient({
+  url: process.env.DATABASE_URL || 'file:local.db',
+  authToken: process.env.DATABASE_AUTH_TOKEN,
+})
 
+export const db = drizzle(client, { schema })
 export type DB = typeof db
