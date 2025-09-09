@@ -2,14 +2,37 @@
 
 import { useState } from 'react'
 import { useActionState } from 'react'
+import { useFormStatus } from 'react-dom'
 import { register } from '@/actions/auth'
 import { useGuestGuard } from '@/hooks/useAuthGuard'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { ArrowLeft, Eye, EyeOff } from 'lucide-react'
+import { ArrowLeft, Eye, EyeOff, Loader2 } from 'lucide-react'
 import Link from 'next/link'
+
+// Separate component for the register button to use useFormStatus
+function RegisterButton() {
+  const { pending } = useFormStatus();
+  
+  return (
+    <Button 
+      type="submit"
+      disabled={pending}
+      className="w-full h-12 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-normal mt-6 rounded-full"
+    >
+      {pending ? (
+        <>
+          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+          Creating account...
+        </>
+      ) : (
+        "Create my account"
+      )}
+    </Button>
+  );
+}
 
 export default function RegisterPage() {
   // Redirect authenticated users to dashboard
@@ -125,12 +148,7 @@ export default function RegisterPage() {
             )}
 
             {/* Create Account Button */}
-            <Button 
-              type="submit"
-              className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-normal mt-6 rounded-full"
-            >
-              Create my account
-            </Button>
+            <RegisterButton />
           </form>
 
           {/* Login Link */}
